@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="LinkTree.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  </head>
+  <body>
+    <div class="text-center p-3">
+      <span class="text-bg-dark p-2 rounded-3"
+        ><i class="fa-solid fa-link me-2"></i>Link Tree App</span
+      >
+    </div>
+    <div class="d-flex justify-content-center mb-4">
+      <div class="dropdown-center">
+        <button
+          class="btn btn-dark dropdown-toggle"
+          type="button"
+          id="linkActionsDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false">
+          <i class="fa-solid fa-bars me-1"></i> İşlemler
+        </button>
+        <ul
+          class="dropdown-menu rounded-3"
+          aria-labelledby="linkActionsDropdown">
+          <li>
+            <button
+              id="btnOpenModal"
+              class="dropdown-item"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + C">
+              <i class="fa-solid fa-plus me-2"></i>
+              Link Oluştur
+            </button>
+          </li>
+          <li>
+            <button
+              id="btnclearalllinks"
+              class="dropdown-item"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + L">
+              <i class="fa-solid fa-trash-can me-2"></i>
+              Tüm linkleri temizle
+            </button>
+          </li>
+          <li>
+            <button
+              id="btnfileexport"
+              class="dropdown-item"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + F">
+              <i class="fa-solid fa-file-arrow-up me-2"></i>
+              İçe aktar
+            </button>
+          </li>
+          <li>
+            <button
+              id="btnfilexportout"
+              class="dropdown-item"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + O">
+              <i class="fa-solid fa-cloud-arrow-up me-2"></i>
+              Dışa aktar
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <input id="fileInput" type="file" hidden accept="application/json" />
+    </div>
+    <div class="container pb-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8" id="linkListContainer"></div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="linkAddModal"
+      tabindex="-1"
+      data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="fa-solid fa-circle-plus me-1"></i>Link Ekle
+            </h5>
+            <button id="btnCloseModal" type="button" class="btn-close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-2">
+              <label class="form-label text-bg-dark p-2 rounded-2"
+                ><i class="fa-solid fa-a me-1"></i>Link Adı</label
+              >
+              <input
+                maxlength="50"
+                type="text"
+                id="LinkName"
+                class="form-control"
+                placeholder="Örn: YouTube (En fazla 50 karakter)" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-bg-dark p-2 rounded-2"
+                ><i class="fa-solid fa-globe me-1"></i> URL</label
+              >
+              <input
+                type="url"
+                id="LinkUrl"
+                class="form-control"
+                placeholder="https://" />
+            </div>
+            <div id="alertmain"></div>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button
+              type="button"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + K || Enter"
+              data-bs-placement="left"
+              class="btn btn-primary"
+              id="btnSave">
+              <i class="fa-solid fa-floppy-disk me-1"></i> Kaydet
+            </button>
+            <button
+              type="button"
+              data-bs-toggle="tooltip"
+              data-bs-title="Ctrl + Alt + D"
+              data-bs-placement="left"
+              class="btn btn-danger"
+              id="btnDelete">
+              <i class="fa-solid fa-trash-can me-1"></i> Temizle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="LinkTree.js"></script>
+  </body>
+</html>
