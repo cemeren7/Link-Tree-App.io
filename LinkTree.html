@@ -28,6 +28,7 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   </head>
   <body>
     <div class="text-center p-3">
@@ -49,53 +50,62 @@
           class="dropdown-menu rounded-3"
           aria-labelledby="linkActionsDropdown">
           <li>
-            <button
-              id="btnOpenModal"
-              class="dropdown-item"
-              data-bs-toggle="tooltip"
-              data-bs-title="Ctrl + Alt + C">
-              <i class="fa-solid fa-plus me-2"></i>
+            <button id="btnOpenModal" class="dropdown-item">
+              <i class="fa-solid fa-plus me-1"></i>
               Link Oluştur
             </button>
           </li>
           <li>
-            <button
-              id="btnclearalllinks"
-              class="dropdown-item"
-              data-bs-toggle="tooltip"
-              data-bs-title="Ctrl + Alt + L">
-              <i class="fa-solid fa-trash-can me-2"></i>
+            <button id="btnclearalllinks" class="dropdown-item">
+              <i class="fa-solid fa-trash-can me-1"></i>
               Tüm linkleri temizle
             </button>
           </li>
           <li>
-            <button
-              id="btnfileexport"
-              class="dropdown-item"
-              data-bs-toggle="tooltip"
-              data-bs-title="Ctrl + Alt + F">
-              <i class="fa-solid fa-file-arrow-up me-2"></i>
-              İçe aktar
+            <button id="btnfileexport" class="dropdown-item">
+              <i class="fa-solid fa-file-arrow-up me-1"></i>
+              İçe aktar-(Json)
             </button>
           </li>
           <li>
-            <button
-              id="btnfilexportout"
-              class="dropdown-item"
-              data-bs-toggle="tooltip"
-              data-bs-title="Ctrl + Alt + O">
-              <i class="fa-solid fa-cloud-arrow-up me-2"></i>
-              Dışa aktar
+            <button id="btnfilexportout" class="dropdown-item">
+              <i class="fa-solid fa-cloud-arrow-up me-1"></i>
+              Dışa aktar-(Json)
             </button>
           </li>
         </ul>
       </div>
-
       <input id="fileInput" type="file" hidden accept="application/json" />
     </div>
     <div class="container pb-5">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8" id="linkListContainer"></div>
+      </div>
+    </div>
+    <div class="modal fade" id="qrModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">QR Code</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body d-flex justify-content-center">
+            <div id="qrModalBody"></div>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-center">
+            <button type="button" class="btn btn-primary" id="btnqrcode">
+              <i class="fa-solid fa-download me-1"></i> İndir
+            </button>
+            <button type="button" class="btn btn-primary" id="btncopyqrcode">
+              <i class="fa-solid fa-copy me-1"></i> Kopyala
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -133,14 +143,13 @@
                 class="form-control"
                 placeholder="https://" />
             </div>
-            <div id="alertmain"></div>
           </div>
-          <div class="modal-footer d-flex justify-content-center">
+          <div class="modal-footer">
             <button
               type="button"
               data-bs-toggle="tooltip"
               data-bs-title="Ctrl + Alt + K || Enter"
-              data-bs-placement="left"
+              data-bs-placement="top"
               class="btn btn-primary"
               id="btnSave">
               <i class="fa-solid fa-floppy-disk me-1"></i> Kaydet
@@ -149,7 +158,7 @@
               type="button"
               data-bs-toggle="tooltip"
               data-bs-title="Ctrl + Alt + D"
-              data-bs-placement="left"
+              data-bs-placement="top"
               class="btn btn-danger"
               id="btnDelete">
               <i class="fa-solid fa-trash-can me-1"></i> Temizle
