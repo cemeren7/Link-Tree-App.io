@@ -29,6 +29,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
   </head>
   <body>
     <div class="text-center p-3">
@@ -73,6 +74,9 @@
               Dışa aktar-(Json)
             </button>
           </li>
+          <li>
+            <button id="btnmodecontrol" class="dropdown-item"></button>
+          </li>
         </ul>
       </div>
       <input id="fileInput" type="file" hidden accept="application/json" />
@@ -103,6 +107,9 @@
             </button>
             <button type="button" class="btn btn-primary" id="btncopyqrcode">
               <i class="fa-solid fa-copy me-1"></i> Kopyala
+            </button>
+            <button type="button" class="btn btn-primary" id="btnqrurlgo">
+              <i class="fa-solid fa-link me-1"></i> Url Git
             </button>
           </div>
         </div>
@@ -148,6 +155,7 @@
             <button
               type="button"
               data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
               data-bs-title="Ctrl + Alt + K || Enter"
               data-bs-placement="top"
               class="btn btn-primary"
@@ -157,6 +165,7 @@
             <button
               type="button"
               data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
               data-bs-title="Ctrl + Alt + D"
               data-bs-placement="top"
               class="btn btn-danger"

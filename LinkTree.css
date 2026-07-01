@@ -3,7 +3,7 @@ body {
   background: linear-gradient(135deg, #eef2f7, #dfe7f1);
 }
 
-.btn-danger {
+button {
   transition: all 0.7s ease !important;
 }
 
@@ -13,6 +13,99 @@ body {
 
 .swal2-close {
   font-size: 24px !important;
+}
+
+.swal2-actions button {
+  transform: none !important;
+}
+
+button:hover {
+  transform: scale(1.1);
+}
+
+/* todo dark mode css */
+body.dark {
+  background: linear-gradient(135deg, #111827);
+}
+
+body.dark .custom-tooltip {
+  --bs-tooltip-bg: #ffffff;
+  --bs-tooltip-color: #111827;
+}
+
+body.dark span,
+body.dark .dropdown-toggle,
+body.dark .form-label,
+body.dark .form-control {
+  background-color: white !important;
+  color: #111827 !important;
+  font-weight: 600 !important;
+}
+
+body.dark .form-control:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+body.dark .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+body.dark .btn-danger,
+body.dark .btn-secondary {
+  background-color: #111827 !important;
+  color: white !important;
+  border-color: white;
+}
+
+body.dark .modal .modal-dialog .modal-footer button {
+  background-color: white !important;
+  color: #111827 !important;
+  border-color: white;
+  font-weight: 600 !important;
+}
+
+body.dark .modal .modal-dialog .modal-header {
+  border-bottom-color: #383d47 !important;
+}
+
+body.dark .modal .modal-dialog .modal-footer {
+  border-top-color: #383d47 !important;
+}
+
+body.dark .link-icon-container {
+  border: 1px solid white;
+  background-color: #111827 !important;
+}
+
+body.dark .link-icon-container i {
+  color: white !important;
+}
+
+body.dark .modal .modal-dialog .modal-header,
+body.dark .modal .modal-dialog .modal-body,
+body.dark .modal .modal-dialog .modal-footer {
+  background-color: #111827 !important;
+  color: white !important;
+}
+
+body.dark .form-control::placeholder {
+  color: #111827;
+}
+
+body.dark .card-body {
+  transition: all 0.7s ease;
+}
+
+body.dark .link-item-wrapper:hover .card-body {
+  box-shadow:
+    rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset,
+    rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+body.dark .dropdown-item:hover {
+  background-color: #111827 !important;
+  color: white !important;
 }
 
 span,
@@ -30,8 +123,13 @@ button {
   transition: all 0.7s ease !important;
 }
 
+.modal-content {
+  border: none !important;
+}
+
 .dropdown-item:hover {
   background-color: lightgray !important;
+  transform: none;
 }
 
 .link-card {

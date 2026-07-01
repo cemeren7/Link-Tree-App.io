@@ -15,7 +15,10 @@ const qrContainer = document.querySelector("#qrModalBody");
 const qrcodemodal = document.querySelector("#qrModal");
 const btnqrcode = document.querySelector("#btnqrcode");
 const btncopyqrcode = document.querySelector("#btncopyqrcode");
+const btnmodecontrol = document.querySelector("#btnmodecontrol");
+const btnqrurlgo = document.querySelector("#btnqrurlgo");
 let LinksCards = [];
+let mode;
 let controlFlagUrl;
 const tooltipTriggerList = document.querySelectorAll(
   '[data-bs-toggle="tooltip"]',
@@ -35,6 +38,23 @@ fileInput.addEventListener("change", () => {
     });
   };
   reader.readAsText(fileselect);
+});
+
+btnmodecontrol.addEventListener("click", () => {
+  if (!document.body.classList.contains("dark")) {
+    document.body.classList.add("dark");
+    btnmodecontrol.innerHTML = "<i class='fa-solid fa-sun me-1'></i> Açık mod";
+    localStorage.setItem("Mode", "Dark");
+  } else {
+    document.body.classList.remove("dark");
+    btnmodecontrol.innerHTML = "<i class='fa-solid fa-moon me-1'></i> Koyu mod";
+    localStorage.setItem("Mode", "Light");
+  }
+  if (document.body.classList.contains("dark")) {
+    mode = "dark";
+  } else {
+    mode = "";
+  }
 });
 
 btnfilexportout.addEventListener("click", () => {
@@ -102,6 +122,18 @@ document.addEventListener("DOMContentLoaded", () => {
   tooltipTriggerList.forEach(
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
   );
+  if (localStorage.getItem("Mode") === "Dark") {
+    document.body.classList.add("dark");
+    btnmodecontrol.innerHTML = "<i class='fa-solid fa-sun me-1'></i> Açık mod";
+  } else {
+    document.body.classList.remove("dark");
+    btnmodecontrol.innerHTML = "<i class='fa-solid fa-moon me-1'></i> Koyu mod";
+  }
+  if (document.body.classList.contains("dark")) {
+    mode = "dark";
+  } else {
+    mode = "";
+  }
 });
 
 btnqrcode.addEventListener("click", () => {
@@ -131,6 +163,32 @@ btncopyqrcode.addEventListener("click", async () => {
     }),
   ]);
   CreatAlertMessageSuccess("Qr kod kopyalandı");
+});
+
+btnqrurlgo.addEventListener("click", async () => {
+  const img = qrContainer.querySelector("img");
+  const canvas = document.createElement("canvas");
+  const a = document.createElement("a");
+  const ctx = canvas.getContext("2d");
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  image.src = img.src;
+  image.onload = () => {
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, canvas.width, canvas.height);
+    if (code) {
+      a.href = code.data;
+      a.target = "_blaknk";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      CreatAlertMessage("QR okunamadı");
+    }
+  };
 });
 
 btnSave.addEventListener("click", async () => {
@@ -253,7 +311,8 @@ function CreatLink(LinkName, Url) {
 function CreatAlertMessage(Text) {
   const ToastAlert = Swal.mixin({
     toast: true,
-    position: "top-end",
+    theme: mode,
+    position: "top-start",
     showClass: {
       popup: `
         animate__animated
@@ -270,10 +329,8 @@ function CreatAlertMessage(Text) {
     },
     showConfirmButton: false,
     showCloseButton: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
+    timer: 3000,
+    timerProgressBar: true,
   });
   ToastAlert.fire({
     icon: "warning",
@@ -284,7 +341,8 @@ function CreatAlertMessage(Text) {
 function CreatAlertMessageSuccess(Text) {
   const ToastAlert = Swal.mixin({
     toast: true,
-    position: "top-end",
+    theme: mode,
+    position: "top-start",
     showClass: {
       popup: `
         animate__animated
@@ -301,10 +359,8 @@ function CreatAlertMessageSuccess(Text) {
     },
     showConfirmButton: false,
     showCloseButton: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
+    timer: 3000,
+    timerProgressBar: true,
   });
   ToastAlert.fire({
     icon: "success",
@@ -361,34 +417,13 @@ function renderNotes() {
     const deleteBtn = link.querySelector(".delete-btn");
     deleteBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      Swal.fire({
-        icon: "warning",
-        title: "Uyarı",
-        text: "Seçili linki silmek istediğinize eminmisiniz?",
-        showClass: {
-          popup: `
-        animate__animated
-        animate__fadeInUp
-        animate__faster
-      `,
+      SwalFire("Seçili linki silmek istediğinize eminmisiniz?").then(
+        (result) => {
+          if (result.isConfirmed) {
+            deleteLink(card.id);
+          }
         },
-        hideClass: {
-          popup: `
-        animate__animated
-        animate__fadeOutDown
-        animate__faster
-      `,
-        },
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonColor: "red",
-        confirmButtonText: "Sil",
-        cancelButtonText: "Vazgeç",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteLink(card.id);
-        }
-      });
+      );
     });
 
     const qrBtn = link.querySelector(".qr-btn");
@@ -586,9 +621,13 @@ function LinkIcon(url) {
 
 function SwalFire(Text) {
   return Swal.fire({
+    theme: mode,
+    position: "top",
     title: "Uyarı",
     text: Text,
     icon: "warning",
+    allowOutsideClick: false, // todo  out click
+    allowEscapeKey: false, // todo esc click
     showClass: {
       popup: `
         animate__animated
@@ -604,7 +643,7 @@ function SwalFire(Text) {
       `,
     },
     showCancelButton: true,
-    confirmButtonText: "Evet, çık",
+    confirmButtonText: "Evet",
     cancelButtonText: "Hayır",
   });
 }
