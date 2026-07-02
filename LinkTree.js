@@ -18,6 +18,7 @@ const btncopyqrcode = document.querySelector("#btncopyqrcode");
 const btnmodecontrol = document.querySelector("#btnmodecontrol");
 const btnqrurlgo = document.querySelector("#btnqrurlgo");
 const topscrool = document.querySelector("#topscrool");
+const topscrooli = document.querySelector("#topscrool i");
 let LinksCards = [];
 let mode;
 let controlFlagUrl;
@@ -58,8 +59,20 @@ btnmodecontrol.addEventListener("click", () => {
   }
 });
 
+window.addEventListener("scroll", () => {
+  ControlScroll();
+});
+
 topscrool.addEventListener("click", () => {
   document.documentElement.scrollTop = 0;
+});
+
+topscrool.addEventListener("mouseover", () => {
+  topscrooli.className = "fa-solid fa-arrow-up fa-bounce";
+});
+
+topscrool.addEventListener("mouseout", () => {
+  topscrooli.className = "fa-solid fa-arrow-up";
 });
 
 btnfilexportout.addEventListener("click", () => {
@@ -139,6 +152,7 @@ btnOpenModal.addEventListener("click", () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadFromStorage();
+  ControlScroll();
   tooltipTriggerList.forEach(
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
   );
@@ -176,7 +190,6 @@ btncopyqrcode.addEventListener("click", async () => {
   const img = qrContainer.querySelector("img").src;
   const response = await fetch(img);
   const blob = await response.blob();
-
   await navigator.clipboard.write([
     new ClipboardItem({
       [blob.type]: blob,
@@ -186,13 +199,13 @@ btncopyqrcode.addEventListener("click", async () => {
 });
 
 btnqrurlgo.addEventListener("click", async () => {
-  const img = qrContainer.querySelector("img");
+  const img = qrContainer.querySelector("img").src;
   const canvas = document.createElement("canvas");
   const a = document.createElement("a");
   const ctx = canvas.getContext("2d");
   const image = new Image();
   image.crossOrigin = "anonymous";
-  image.src = img.src;
+  image.src = img;
   image.onload = () => {
     canvas.width = image.width;
     canvas.height = image.height;
@@ -334,18 +347,10 @@ function CreatAlertMessage(Text) {
     theme: mode,
     position: "top-start",
     showClass: {
-      popup: `
-        animate__animated
-        animate__fadeInUp
-        animate__faster
-      `,
+      popup: "animate__animated animate__slideInRight animate__faster",
     },
     hideClass: {
-      popup: `
-        animate__animated
-        animate__fadeOutDown
-        animate__faster
-      `,
+      popup: "animate__animated animate__slideOutRight animate__faster",
     },
     showConfirmButton: false,
     showCloseButton: true,
@@ -368,18 +373,10 @@ function CreatAlertMessageSuccess(Text) {
     theme: mode,
     position: "top-start",
     showClass: {
-      popup: `
-        animate__animated
-        animate__fadeInUp
-        animate__faster
-      `,
+      popup: "animate__animated animate__slideInRight animate__faster",
     },
     hideClass: {
-      popup: `
-        animate__animated
-        animate__fadeOutDown
-        animate__faster
-      `,
+      popup: "animate__animated animate__slideOutRight animate__faster",
     },
     showConfirmButton: false,
     showCloseButton: true,
@@ -657,21 +654,21 @@ function SwalFire(Text) {
     allowOutsideClick: false, // todo  out click
     allowEscapeKey: false, // todo esc click
     showClass: {
-      popup: `
-        animate__animated
-        animate__fadeInUp
-        animate__faster
-      `,
+      popup: "animate__animated animate__zoomIn animate__faster",
     },
     hideClass: {
-      popup: `
-        animate__animated
-        animate__fadeOutDown
-        animate__faster
-      `,
+      popup: "animate__animated animate__zoomOut animate__faster",
     },
     showCancelButton: true,
     confirmButtonText: "Evet",
     cancelButtonText: "Vazgeç",
   });
+}
+
+function ControlScroll() {
+  if (window.scrollY > 300) {
+    topscrool.classList.remove("d-none");
+  } else {
+    topscrool.classList.add("d-none");
+  }
 }

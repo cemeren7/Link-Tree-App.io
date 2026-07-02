@@ -151,14 +151,6 @@ button {
   padding: 11px;
 }
 
-#topscrool i {
-  transition: all 0.7s ease;
-}
-
-#topscrool:hover i {
-  transform: translateY(-3px);
-}
-
 .link-item-wrapper:hover .link-card {
   transform: translateY(5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
