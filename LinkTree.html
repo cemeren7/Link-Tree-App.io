@@ -65,13 +65,13 @@
           <li>
             <button id="btnfileexport" class="dropdown-item">
               <i class="fa-solid fa-file-arrow-up me-1"></i>
-              İçe aktar-(Json)
+              İçe aktar (Json)
             </button>
           </li>
           <li>
             <button id="btnfilexportout" class="dropdown-item">
               <i class="fa-solid fa-cloud-arrow-up me-1"></i>
-              Dışa aktar-(Json)
+              Dışa aktar (Json)
             </button>
           </li>
           <li>
@@ -90,7 +90,9 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">QR Code</h5>
+            <h5 class="modal-title">
+              <i class="fa-solid fa-qrcode me-1"></i>QR Code
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -98,17 +100,38 @@
           </div>
 
           <div class="modal-body d-flex justify-content-center">
-            <div id="qrModalBody"></div>
+            <div id="qrModalBody" class="border"></div>
           </div>
 
           <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-primary" id="btnqrcode">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
+              data-bs-title="Ctrl + D"
+              data-bs-placement="top"
+              id="btnqrcode">
               <i class="fa-solid fa-download me-1"></i> İndir
             </button>
-            <button type="button" class="btn btn-primary" id="btncopyqrcode">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
+              data-bs-title="Ctrl + C"
+              data-bs-placement="top"
+              id="btncopyqrcode">
               <i class="fa-solid fa-copy me-1"></i> Kopyala
             </button>
-            <button type="button" class="btn btn-primary" id="btnqrurlgo">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
+              data-bs-title="Ctrl + G"
+              data-bs-placement="top"
+              id="btnqrurlgo">
               <i class="fa-solid fa-link me-1"></i> Url Git
             </button>
           </div>
@@ -151,7 +174,7 @@
                 placeholder="https://" />
             </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer d-flex justify-content-center">
             <button
               type="button"
               data-bs-toggle="tooltip"
@@ -175,6 +198,11 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="position-fixed bottom-0 end-0 p-4">
+      <span class="text-bg-dark rounded-5" id="topscrool"
+        ><i class="fa-solid fa-arrow-up fs-6"></i
+      ></span>
     </div>
     <script src="LinkTree.js"></script>
   </body>

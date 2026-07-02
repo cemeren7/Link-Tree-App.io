@@ -11,12 +11,20 @@ button {
   text-align: center;
 }
 
+.card-title {
+  text-transform: capitalize;
+}
+
 .swal2-close {
   font-size: 24px !important;
 }
 
 .swal2-actions button {
   transform: none !important;
+}
+
+.dropdown-toggle:hover {
+  transform: none;
 }
 
 button:hover {
@@ -138,8 +146,21 @@ button {
   overflow: hidden;
 }
 
+#topscrool {
+  cursor: pointer;
+  padding: 11px;
+}
+
+#topscrool i {
+  transition: all 0.7s ease;
+}
+
+#topscrool:hover i {
+  transform: translateY(-3px);
+}
+
 .link-item-wrapper:hover .link-card {
-  transform: translateX(5px);
+  transform: translateY(5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
 

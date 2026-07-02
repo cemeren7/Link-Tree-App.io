@@ -17,6 +17,7 @@ const btnqrcode = document.querySelector("#btnqrcode");
 const btncopyqrcode = document.querySelector("#btncopyqrcode");
 const btnmodecontrol = document.querySelector("#btnmodecontrol");
 const btnqrurlgo = document.querySelector("#btnqrurlgo");
+const topscrool = document.querySelector("#topscrool");
 let LinksCards = [];
 let mode;
 let controlFlagUrl;
@@ -55,6 +56,10 @@ btnmodecontrol.addEventListener("click", () => {
   } else {
     mode = "";
   }
+});
+
+topscrool.addEventListener("click", () => {
+  document.documentElement.scrollTop = 0;
 });
 
 btnfilexportout.addEventListener("click", () => {
@@ -106,6 +111,21 @@ ModaLinkGlobal.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     e.preventDefault();
     btnCloseModal.click();
+  }
+});
+
+qrcodemodal.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.key.toUpperCase() === "D") {
+    e.preventDefault();
+    btnqrcode.click();
+  }
+  if (e.ctrlKey && e.key.toUpperCase() === "C") {
+    e.preventDefault();
+    btncopyqrcode.click();
+  }
+  if (e.ctrlKey && e.key.toUpperCase() === "G") {
+    e.preventDefault();
+    btnqrurlgo.click();
   }
 });
 
@@ -331,6 +351,10 @@ function CreatAlertMessage(Text) {
     showCloseButton: true,
     timer: 3000,
     timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
   });
   ToastAlert.fire({
     icon: "warning",
@@ -361,6 +385,10 @@ function CreatAlertMessageSuccess(Text) {
     showCloseButton: true,
     timer: 3000,
     timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
   });
   ToastAlert.fire({
     icon: "success",
@@ -589,7 +617,7 @@ function LinkIcon(url) {
   ) {
     return "fa-brands fa-aws fa-lg text-warning";
   } else if (url.toLowerCase().includes("firebase")) {
-    return "fa-solid fa-fire fa-lg text-warning";
+    return "fa-brands fa-google fa-lg text-warning";
   } else if (url.toLowerCase().includes("vercel")) {
     return "fa-solid fa-triangle-exclamation fa-lg text-dark";
   } else if (url.toLowerCase().includes("netlify")) {
@@ -644,6 +672,6 @@ function SwalFire(Text) {
     },
     showCancelButton: true,
     confirmButtonText: "Evet",
-    cancelButtonText: "Hayır",
+    cancelButtonText: "Vazgeç",
   });
 }
