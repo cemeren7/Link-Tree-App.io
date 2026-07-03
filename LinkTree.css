@@ -116,6 +116,10 @@ body.dark .dropdown-item:hover {
   color: white !important;
 }
 
+body.dark #qrModalBody {
+  border: 1px solid white !important;
+}
+
 span,
 label,
 button {
@@ -163,6 +167,14 @@ button {
   border: 1px solid #b1b3b6;
 }
 
+.chosen .card-body {
+  background-color: #111827;
+}
+
+.chosen .card-body .card-title {
+  color: white !important;
+}
+
 .link-arrow {
   transition: transform 0.3s ease;
 }
@@ -182,4 +194,8 @@ button {
   .link-card .card-title {
     font-size: 1rem;
   }
+}
+
+#qrcodemodal {
+  min-width: 550px !important; /*todo boostrap modal width maunel size */
 }

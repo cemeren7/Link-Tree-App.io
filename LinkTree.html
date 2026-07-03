@@ -30,6 +30,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
   </head>
   <body>
     <div class="text-center p-3">
@@ -56,28 +57,24 @@
               Link Oluştur
             </button>
           </li>
-          <li class="dropdown-divider"></li>
           <li>
             <button id="btnclearalllinks" class="dropdown-item">
               <i class="fa-solid fa-trash-can me-1"></i>
               Tüm linkleri temizle
             </button>
           </li>
-          <li class="dropdown-divider"></li>
           <li>
             <button id="btnfileexport" class="dropdown-item">
               <i class="fa-solid fa-file-arrow-up me-1"></i>
               İçe aktar (Json)
             </button>
           </li>
-          <li class="dropdown-divider"></li>
           <li>
             <button id="btnfilexportout" class="dropdown-item">
               <i class="fa-solid fa-cloud-arrow-up me-1"></i>
               Dışa aktar (Json)
             </button>
           </li>
-          <li class="dropdown-divider"></li>
           <li>
             <button id="btnmodecontrol" class="dropdown-item"></button>
           </li>
@@ -85,14 +82,24 @@
       </div>
       <input id="fileInput" type="file" hidden accept="application/json" />
     </div>
-    <div class="container pb-5">
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="input-group w-25">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input
+          type="search"
+          class="form-control text-center"
+          id="filternamesearch"
+          placeholder="Link adına göre filtrele (Enter)" />
+      </div>
+    </div>
+    <div class="container pt-3">
       <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8" id="linkListContainer"></div>
       </div>
     </div>
     <div class="modal fade" id="qrModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content" id="qrcodemodal">
           <div class="modal-header">
             <h5 class="modal-title">
               <i class="fa-solid fa-qrcode me-1"></i>QR Code
@@ -126,7 +133,7 @@
               data-bs-title="Ctrl + C"
               data-bs-placement="top"
               id="btncopyqrcode">
-              <i class="fa-solid fa-copy me-1"></i> Kopyala
+              <i class="fa-solid fa-copy me-1"></i> Qr Kopyala
             </button>
             <button
               type="button"
@@ -137,6 +144,16 @@
               data-bs-placement="top"
               id="btnqrurlgo">
               <i class="fa-solid fa-link me-1"></i> Url Git
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="tooltip"
+              data-bs-custom-class="custom-tooltip"
+              data-bs-title="Ctrl + Q"
+              data-bs-placement="top"
+              id="btnurlcopy">
+              <i class="fa-solid fa-copy me-1"></i>Url Kopyala
             </button>
           </div>
         </div>
@@ -174,7 +191,6 @@
               <input
                 type="url"
                 id="LinkUrl"
-                autocomplete="off"
                 class="form-control"
                 placeholder="https://" />
             </div>

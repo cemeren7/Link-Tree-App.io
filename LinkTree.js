@@ -18,6 +18,8 @@ const btncopyqrcode = document.querySelector("#btncopyqrcode");
 const btnmodecontrol = document.querySelector("#btnmodecontrol");
 const btnqrurlgo = document.querySelector("#btnqrurlgo");
 const topscrool = document.querySelector("#topscrool");
+const btnurlcopy = document.querySelector("#btnurlcopy");
+const filternamesearch = document.querySelector("#filternamesearch");
 const topscrooli = document.querySelector("#topscrool i");
 let LinksCards = [];
 let mode;
@@ -26,10 +28,17 @@ const tooltipTriggerList = document.querySelectorAll(
   '[data-bs-toggle="tooltip"]',
 );
 
+Sortable.create(ContainerMain, {
+  animation: 250,
+  chosenClass: "chosen",
+  forceFallback: true,
+  handle: ".dragHandle",
+});
+
 fileInput.addEventListener("change", () => {
   const fileselect = fileInput.files[0];
   if (fileselect.type !== "application/json") {
-    CreatAlertMessage("Dosya JSON formatında olmalı");
+    CreatAlertMessage("Dosya JSON formatında olmalı", "warning");
     return;
   }
   const reader = new FileReader();
@@ -59,12 +68,27 @@ btnmodecontrol.addEventListener("click", () => {
   }
 });
 
+LinkName.addEventListener("keydown", function (e) {
+  if (e.key === "Delete") {
+    this.value = "";
+  }
+});
+
+LinkUrl.addEventListener("keydown", function (e) {
+  if (e.key === "Delete") {
+    this.value = "";
+  }
+});
+
 window.addEventListener("scroll", () => {
   ControlScroll();
 });
 
 topscrool.addEventListener("click", () => {
-  document.documentElement.scrollTop = 0;
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
 });
 
 topscrool.addEventListener("mouseover", () => {
@@ -73,6 +97,32 @@ topscrool.addEventListener("mouseover", () => {
 
 topscrool.addEventListener("mouseout", () => {
   topscrooli.className = "fa-solid fa-arrow-up";
+});
+
+filternamesearch.addEventListener("keydown", function (e) {
+  if (e.key === "Delete") {
+    this.value = "";
+  }
+  if (e.key === "Enter") {
+    const alllinks = document.querySelectorAll(".link-item-wrapper");
+    const val = this.value.trim().toLowerCase().replaceAll(/\s+/g, "");
+    if (alllinks.length > 0) {
+      alllinks.forEach((link) => {
+        const cardtitle = link
+          .querySelector(".card-title")
+          .textContent.trim()
+          .toLowerCase()
+          .replaceAll(/\s+/g, "");
+        if (cardtitle.includes(val)) {
+          link.setAttribute("style", "display:block !important");
+        } else {
+          link.setAttribute("style", "display:none !important");
+        }
+      });
+    } else {
+      CreatAlertMessage("Filtre uygulanacak link bulunamadı.", "warning");
+    }
+  }
 });
 
 btnfilexportout.addEventListener("click", () => {
@@ -88,7 +138,7 @@ btnfilexportout.addEventListener("click", () => {
     }
   });
   if (links.length === 0) {
-    CreatAlertMessage("Dışa aktarılacak veri bulunamadı");
+    CreatAlertMessage("Dışa aktarılacak veri bulunamadı", "warning");
     return;
   }
   const json = JSON.stringify(links, null, 2);
@@ -140,6 +190,10 @@ qrcodemodal.addEventListener("keydown", (e) => {
     e.preventDefault();
     btnqrurlgo.click();
   }
+  if (e.ctrlKey && e.key.toUpperCase() === "Q") {
+    e.preventDefault();
+    btnurlcopy.click();
+  }
 });
 
 ModaLinkGlobal.addEventListener("shown.bs.modal", () => {
@@ -168,6 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     mode = "";
   }
+  filternamesearch.focus();
 });
 
 btnqrcode.addEventListener("click", () => {
@@ -186,6 +241,28 @@ btnqrcode.addEventListener("click", () => {
     });
 });
 
+btnurlcopy.addEventListener("click", () => {
+  const img = qrContainer.querySelector("img").src;
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  image.src = img;
+  image.onload = () => {
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const code = jsQR(imageData.data, canvas.width, canvas.height);
+    if (code) {
+      navigator.clipboard.writeText(code.data);
+      CreatAlertMessage("Url kopyalandı", "success");
+    } else {
+      CreatAlertMessage("Url okunamadı", "warning");
+    }
+  };
+});
+
 btncopyqrcode.addEventListener("click", async () => {
   const img = qrContainer.querySelector("img").src;
   const response = await fetch(img);
@@ -195,7 +272,7 @@ btncopyqrcode.addEventListener("click", async () => {
       [blob.type]: blob,
     }),
   ]);
-  CreatAlertMessageSuccess("Qr kod kopyalandı");
+  CreatAlertMessage("Qr kopyalandı", "success");
 });
 
 btnqrurlgo.addEventListener("click", async () => {
@@ -219,7 +296,7 @@ btnqrurlgo.addEventListener("click", async () => {
       a.click();
       document.body.removeChild(a);
     } else {
-      CreatAlertMessage("QR okunamadı");
+      CreatAlertMessage("QR okunamadı", "warning");
     }
   };
 });
@@ -230,18 +307,18 @@ btnSave.addEventListener("click", async () => {
   const linkurl = LinkUrl.value.trim();
 
   if (linkname === "" || linkurl === "") {
-    CreatAlertMessage("Url ve link adı boş olamaz.");
+    CreatAlertMessage("Url ve link adı boş olamaz.", "warning");
     return;
   }
 
   if (!linkurl.includes("https://")) {
-    CreatAlertMessage("Lütfen geçerli bir url giriniz.");
+    CreatAlertMessage("Lütfen geçerli bir url giriniz.", "warning");
     return;
   }
   const urlExists = await checkUrl(linkurl);
 
   if (!urlExists) {
-    CreatAlertMessage("Bu web adresine ulaşılamıyor.");
+    CreatAlertMessage("Bu web adresine ulaşılamıyor.", "warning");
     return;
   }
 
@@ -257,6 +334,7 @@ btnSave.addEventListener("click", async () => {
   if (controlFlagUrl === true) {
     CreatAlertMessage(
       "Bu link önceden eklenmiştir. Lütfen yeni bir link giriniz.",
+      "warning",
     );
     return;
   }
@@ -276,7 +354,7 @@ btnclearalllinks.addEventListener("click", () => {
       },
     );
   } else {
-    CreatAlertMessage("Silinecek herhangi bir link bulunamadı.");
+    CreatAlertMessage("Silinecek herhangi bir link bulunamadı.", "warning");
   }
 });
 
@@ -341,7 +419,7 @@ function CreatLink(LinkName, Url) {
   HideModal(ModaLinkGlobal);
 }
 
-function CreatAlertMessage(Text) {
+function CreatAlertMessage(Text, icontype) {
   const ToastAlert = Swal.mixin({
     toast: true,
     theme: mode,
@@ -362,33 +440,7 @@ function CreatAlertMessage(Text) {
     },
   });
   ToastAlert.fire({
-    icon: "warning",
-    title: Text,
-  });
-}
-
-function CreatAlertMessageSuccess(Text) {
-  const ToastAlert = Swal.mixin({
-    toast: true,
-    theme: mode,
-    position: "top-start",
-    showClass: {
-      popup: "animate__animated animate__slideInRight animate__faster",
-    },
-    hideClass: {
-      popup: "animate__animated animate__slideOutRight animate__faster",
-    },
-    showConfirmButton: false,
-    showCloseButton: true,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
-  ToastAlert.fire({
-    icon: "success",
+    icon: icontype,
     title: Text,
   });
 }
@@ -417,9 +469,9 @@ function renderNotes() {
     link.target = "_blank";
     link.className = "card link-card shadow-sm border-0 text-decoration-none";
     link.innerHTML = `
-      <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+      <div class="card-body  d-flex align-items-center justify-content-between py-3 px-4">
         <div class="d-flex align-items-center">
-          <div class="link-icon-container d-flex align-items-center justify-content-center me-3 rounded-circle text-bg-light">
+          <div class="link-icon-container d-flex align-items-center justify-content-center me-3 rounded-circle text-bg-light dragHandle">
             <i class="${card.icon}"></i>
           </div>
           <h5 class="card-title mb-0 text-dark fw-semibold">
@@ -651,8 +703,8 @@ function SwalFire(Text) {
     title: "Uyarı",
     text: Text,
     icon: "warning",
-    allowOutsideClick: false, // todo  out click
-    allowEscapeKey: false, // todo esc click
+    allowOutsideClick: false,
+    allowEscapeKey: false,
     showClass: {
       popup: "animate__animated animate__zoomIn animate__faster",
     },
